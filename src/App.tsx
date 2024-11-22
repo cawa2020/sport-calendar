@@ -1,7 +1,7 @@
 import { AuthForm } from "./components/AuthForm";
-import { EventFilters } from "./components/EventFilters";
 import { EventTabs } from "./components/EventTabs";
 import { EventCalendar, Event } from "./components/EventCalendar";
+import { Aside } from "./widgets/Aside";
 
 const events: Event[] = [
   {
@@ -192,11 +192,13 @@ const events: Event[] = [
 
 function App() {
   return (
-    <div className="container mx-auto p-4">
-      <AuthForm />
-      <EventTabs />
-      <EventFilters />
-      <EventCalendar events={events} />
+    <div className="flex">
+      <Aside />
+      <div className="w-full">
+        <AuthForm />
+        <EventTabs />
+        <EventCalendar events={events} />
+      </div>
     </div>
   );
 }

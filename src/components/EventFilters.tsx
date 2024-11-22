@@ -56,7 +56,7 @@ export function EventFilters() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="grid grid-cols-3 gap-4">
+        <div className="flex flex-col gap-2">
           {/* Вид спорта */}
           <FormField
             control={form.control}

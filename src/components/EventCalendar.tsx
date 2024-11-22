@@ -83,10 +83,9 @@ export function EventCalendar({ events }: { events: Event[] }) {
             return (
               <div
                 key={year}
-                className="text-sm border-r px-2 py-1"
+                className="text-sm border-r py-1 text-center"
                 style={{ 
                   width: `${yearDays.length * cellWidth}px`,
-                  textAlign: 'left'
                 }}
               >
                 {year}
@@ -101,10 +100,9 @@ export function EventCalendar({ events }: { events: Event[] }) {
             Object.entries(months).map(([month, monthDays]) => (
               <div
                 key={month}
-                className="text-sm border-r px-2 py-1"
+                className="text-sm border-r py-1 text-center"
                 style={{ 
                   width: `${monthDays.length * cellWidth}px`,
-                  textAlign: 'left'
                 }}
               >
                 {month}
@@ -118,11 +116,9 @@ export function EventCalendar({ events }: { events: Event[] }) {
           {days.map((day) => (
             <div
               key={day.toISOString()}
-              className="text-sm border-r"
+              className="text-sm border-r py-1 text-center"
               style={{ 
                 width: `${cellWidth}px`,
-                textAlign: 'center',
-                padding: '4px 0'
               }}
             >
               {format(day, "d")}

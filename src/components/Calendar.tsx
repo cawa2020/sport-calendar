@@ -3,8 +3,6 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   format,
-  addMonths,
-  subMonths,
   eachDayOfInterval,
   startOfMonth,
   endOfMonth,
@@ -20,20 +18,14 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-
-interface CalendarEvent {
-  id: string;
-  date: Date;
-  color?: string;
-}
-
-interface CalendarProps {
-  events?: CalendarEvent[];
-  onDateSelect?: (date: Date) => void;
-}
+import { CalendarProps } from "@/lib/types";
 
 export function Calendar({ events = [], onDateSelect }: CalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
+
+  const handleDateSelect = (date: Date) => {
+    onDateSelect?.(date);
+  };
 
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
@@ -81,6 +73,7 @@ export function Calendar({ events = [], onDateSelect }: CalendarProps) {
             newDate.setMonth(newDate.getMonth() - 1);
             setCurrentDate(newDate);
           }}
+          size="icon"
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
@@ -92,6 +85,7 @@ export function Calendar({ events = [], onDateSelect }: CalendarProps) {
             newDate.setMonth(newDate.getMonth() + 1);
             setCurrentDate(newDate);
           }}
+          size="icon"
         >
           <ChevronRight className="h-4 w-4" />
         </Button>
@@ -110,7 +104,7 @@ export function Calendar({ events = [], onDateSelect }: CalendarProps) {
         ))}
 
         {/* Дни месяца */}
-        {days.map((day, index) => {
+        {days.map((day) => {
           const dayEvents = events.filter(
             (event) =>
               format(event.date, "yyyy-MM-dd") === format(day, "yyyy-MM-dd")
@@ -126,7 +120,7 @@ export function Calendar({ events = [], onDateSelect }: CalendarProps) {
                   "text-muted-foreground",
                 "hover:bg-accent hover:text-accent-foreground"
               )}
-              onClick={() => onDateSelect?.(day)}
+              onClick={() => handleDateSelect(day)}
             >
               <time dateTime={format(day, "yyyy-MM-dd")}>
                 {format(day, "d")}
@@ -134,7 +128,7 @@ export function Calendar({ events = [], onDateSelect }: CalendarProps) {
               {/* Индикаторы событий */}
               {dayEvents.length > 0 && (
                 <div className="absolute bottom-1 left-0 right-0 flex justify-center gap-0.5">
-                  {dayEvents.map((event, i) => (
+                  {dayEvents.map((event) => (
                     <div
                       key={event.id}
                       className={cn(

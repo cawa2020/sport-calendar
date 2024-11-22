@@ -1,6 +1,11 @@
 import { EventRow, Event } from "@/lib/types";
 import { format, eachDayOfInterval, differenceInDays } from "date-fns";
 import { ru } from "date-fns/locale";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 
 function calculateEventRows(events: Event[]): EventRow[] {
   const rows: EventRow[] = [];
@@ -12,8 +17,8 @@ function calculateEventRows(events: Event[]): EventRow[] {
     for (const row of rows) {
       const canFit = !row.events.some((existingEvent) => {
         return !(
-          event.endDate < existingEvent.startDate ||
-          event.startDate > existingEvent.endDate
+          event.end_date < existingEvent.start_date ||
+          event.start_date > existingEvent.end_date
         );
       });
 
@@ -33,14 +38,17 @@ function calculateEventRows(events: Event[]): EventRow[] {
   return rows;
 }
 
+import { useState } from 'react';
+import { Label } from "@radix-ui/react-label";
+
 export function EventCalendar({ events }: { events: Event[] }) {
-  const cellWidth = 40;
+  const cellWidth = 60;
 
   // Находим крайние даты по всем событиям
   const minDate = new Date(
-    Math.min(...events.map((e) => e.startDate.getTime()))
+    Math.min(...events.map((e) => e.start_date.getTime()))
   );
-  const maxDate = new Date(Math.max(...events.map((e) => e.endDate.getTime())));
+  const maxDate = new Date(Math.max(...events.map((e) => e.end_date.getTime())));
 
   // Получаем все дни для отображения
   const days = eachDayOfInterval({ start: minDate, end: maxDate });
@@ -62,8 +70,17 @@ export function EventCalendar({ events }: { events: Event[] }) {
 
   const eventRows = calculateEventRows(events);
 
+  function getRandomColor() {
+  // Базовые цвета в HSL формате
+    const hue = Math.floor(Math.random() * 360); // Любой оттенок
+    const saturation = Math.floor(Math.random() * 20) + 30; // 60-80%
+    const lightness = Math.floor(Math.random() * 15) + 25; // 25-40%
+
+    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+  }
+
   return (
-    <div className="w-full overflow-x-auto">
+    <div className="w-full overflow-x-auto" style={{gridArea: "eventCalendar"}}>
       <div className="min-w-fit">
         {/* Годы */}
         <div className="flex border-b">
@@ -72,12 +89,14 @@ export function EventCalendar({ events }: { events: Event[] }) {
             return (
               <div
                 key={year}
-                className="text-sm border-r py-1 text-center"
+                className="text-base border-r py-1"
                 style={{
                   width: `${yearDays.length * cellWidth}px`,
                 }}
               >
-                {year}
+                  <span className="truncate sticky left-0 px-2">
+                    {year}
+                  </span>
               </div>
             );
           })}
@@ -89,12 +108,14 @@ export function EventCalendar({ events }: { events: Event[] }) {
             Object.entries(months).map(([month, monthDays]) => (
               <div
                 key={month}
-                className="text-sm border-r py-1 text-center"
+                className="text-base bg-[#F4F4F4] font-medium border-r py-1"
                 style={{
                   width: `${monthDays.length * cellWidth}px`,
                 }}
               >
-                {month}
+                 <span className="truncate sticky left-0 px-2">
+                    {month}
+                  </span>
               </div>
             ))
           )}
@@ -105,7 +126,7 @@ export function EventCalendar({ events }: { events: Event[] }) {
           {days.map((day) => (
             <div
               key={day.toISOString()}
-              className="text-sm border-r py-1 text-center"
+              className="text-base border-r py-1 px-2"
               style={{
                 width: `${cellWidth}px`,
               }}
@@ -118,31 +139,57 @@ export function EventCalendar({ events }: { events: Event[] }) {
         {/* События */}
         <div className="relative">
           {eventRows.map((row, rowIndex) => (
-            <div key={`row-${rowIndex}`} className="relative h-10">
+            <div key={`row-${rowIndex}`} className="relative h-[68px]">
               {row.events.map((event) => {
                 const startDayIndex = differenceInDays(
-                  event.startDate,
+                  event.start_date,
                   minDate
                 );
                 const duration =
-                  differenceInDays(event.endDate, event.startDate) + 1;
+                  differenceInDays(event.end_date, event.start_date) + 1;
 
                 return (
-                  <div
-                    key={event.id}
-                    className={`absolute top-1 h-8 rounded-md px-2 flex items-center text-sm text-white ${
-                      event.color || "bg-blue-500"
-                    }`}
-                    style={{
-                      left: `${startDayIndex * cellWidth}px`,
-                      width: `${duration * cellWidth - 4}px`,
-                    }}
-                  >
-                    <span className="truncate">
-                      {event.title}
-                      {event.participants && `(${event.participants})`}
-                    </span>
-                  </div>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <div
+                        key={event.id}
+                        className={`absolute top-1 h-14 rounded-md bg-muted py-1 cursor-pointer hover:opacity-90 text-white`}
+                        style={{
+                          left: `${startDayIndex * cellWidth}px`,
+                          width: `${duration * cellWidth - 4}px`,
+                          backgroundColor: getRandomColor()
+                        }}
+                      >
+                        <span className="sticky left-0 two-row-text px-2">
+                          {event.title} 
+                        </span>
+                      </div>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                    <div className="grid gap-4">
+                      <div className="space-y-2">
+                        <h4 className="font-medium leading-none">{event.title}</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Set the dimensions for the layer.
+                        </p>
+                      </div>
+                      <div className="grid gap-2">
+                        <div className="grid grid-cols-3 items-center gap-4">
+                          <Label htmlFor="width">Участники</Label>
+                          <span>{event.participants}</span>
+                        </div>
+                        <div className="grid grid-cols-3 items-center gap-4">
+                          <Label htmlFor="maxWidth">Начало</Label>
+                          <span>{format(event.start_date, 'dd.MM.yyyy')}</span>
+                        </div>
+                        <div className="grid grid-cols-3 items-center gap-4">
+                          <Label htmlFor="maxWidth">Окончание</Label>
+                          <span>{format(event.end_date, 'dd.MM.yyyy')}</span>
+                        </div>
+                      </div>
+                    </div>
+                    </PopoverContent>
+                  </Popover>
                 );
               })}
             </div>

@@ -1,15 +1,15 @@
 import { EventTabs } from "./components/EventTabs";
-import { Aside } from "./widgets/Aside";
 import { ChangeEventCalendar } from "./features/ChangeEventCalendar";
+import { EventFilters } from "./components/EventFilters";
+import { SelectCalendarDate } from "./features/SelectCalendarDate";
 
 function App() {
   return (
-    <div className="flex">
-      <Aside />
-      <div className="max-w-full">
+    <div className="flex m-4 layout">
+      {/* <SelectCalendarDate /> */}
+      <EventFilters />
         <EventTabs />
         <ChangeEventCalendar />
-      </div>
     </div>
   );
 }

@@ -13,8 +13,8 @@ export function SelectCalendarDate() {
         setEvents(
           originalEvents.filter((event) =>
             isWithinInterval(selectedDate, {
-              start: startOfDay(event.startDate),
-              end: endOfDay(event.endDate)
+              start: startOfDay(event.start_date),
+              end: endOfDay(event.end_date)
             })
           )
         );

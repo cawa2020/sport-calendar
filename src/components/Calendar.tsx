@@ -35,7 +35,7 @@ export function Calendar({ events = [], onDateSelect }: CalendarProps) {
   const days = eachDayOfInterval({ start: calendarStart, end: calendarEnd });
 
   return (
-    <div className="w-full max-w-md mx-auto">
+    <div className="w-full max-w-md mx-auto" style={{gridArea: "calendar"}}>
       {/* Заголовок календаря */}
       <div className="flex items-center gap-2">
         <div className="text-lg font-medium">

@@ -20,16 +20,16 @@ import {
 import { Button } from "@/components/ui/button";
 
 const formSchema = z.object({
-  sport: z.string().min(1, "Выберите вид спорта"),
-  discipline: z.string().min(1, "Выберите дисциплину"),
-  program: z.string().min(1, "Выберите программу"),
-  location: z.string().min(1, "Укажите место проведения"),
-  participants: z.string().min(1, "Укажите количество участников"),
-  gender: z.string().min(1, "Выберите пол"),
-  ageGroup: z.string().min(1, "Выберите возрастную группу"),
-  dateStart: z.string().min(1, "Выберите дату начала"),
-  dateEnd: z.string().min(1, "Выберите дату окончания"),
-  competitionType: z.string().min(1, "Выберите тип соревнования"),
+  sport: z.string().min(0, "Выберите вид спорта"),
+  discipline: z.string().min(0, "Выберите дисциплину"),
+  program: z.string().min(0, "Выберите программу"),
+  location: z.string().min(0, "Укажите место проведения"),
+  participants: z.string().min(0, "Укажите количество участников"),
+  gender: z.string().min(0, "Выберите пол"),
+  ageGroup: z.string().min(0, "Выберите возрастную группу"),
+  dateStart: z.string().min(0, "Выберите дату начала"),
+  dateEnd: z.string().min(0, "Выберите дату окончания"),
+  competitionType: z.string().min(0, "Выберите тип соревнования"),
 });
 
 export function EventFilters() {
@@ -55,8 +55,8 @@ export function EventFilters() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="flex flex-col gap-2">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" >
+        <div className="flex flex-col gap-2 max-h-[90vh] overflow-auto p-1" style={{gridArea: "filters"}}>
           {/* Вид спорта */}
           <FormField
             control={form.control}
@@ -211,8 +211,9 @@ export function EventFilters() {
             )}
           />
 
+          <div className="flex gap-2">
           {/* Дата начала */}
-          <FormField
+            <FormField
             control={form.control}
             name="dateStart"
             render={({ field }) => (
@@ -224,10 +225,10 @@ export function EventFilters() {
                 <FormMessage />
               </FormItem>
             )}
-          />
+            />
 
-          {/* Дата окончания */}
-          <FormField
+            {/* Дата окончания */}
+            <FormField
             control={form.control}
             name="dateEnd"
             render={({ field }) => (
@@ -239,7 +240,9 @@ export function EventFilters() {
                 <FormMessage />
               </FormItem>
             )}
-          />
+            />
+          </div>
+          
 
           {/* Тип соревнования */}
           <FormField

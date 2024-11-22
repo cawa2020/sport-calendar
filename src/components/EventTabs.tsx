@@ -29,8 +29,8 @@ const tabs = [
 
 export function EventTabs() {
   return (
-    <Tabs defaultValue="upcoming" className="w-full">
-      <TabsList className="grid w-full grid-cols-6">
+    <Tabs defaultValue="upcoming" className="w-full" style={{gridArea: "tabs"}}>
+      <TabsList className="w-fit flex flex-wrap">
         {tabs.map((tab) => (
           <TabsTrigger key={tab.value} value={tab.value}>
             {tab.label}

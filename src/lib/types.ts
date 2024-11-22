@@ -10,11 +10,12 @@ export interface CalendarProps {
 }
 export interface Event {
   id: string;
+  place: string;
   title: string;
-  startDate: Date;
-  endDate: Date;
+  start_date: Date;
+  end_date: Date;
+  program: string;
   participants: number;
-  color?: string;
 }
 
 export interface EventRow {
